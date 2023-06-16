@@ -8,7 +8,9 @@ import pandas as pd
 
 from charger_data import charger_names, correct_states_map
 
+# --------------------------------------------------
 # DATA HELPERS
+# --------------------------------------------------
 
 '''
 Process the charger map data and return a dataframe
@@ -22,6 +24,11 @@ def process_data(charger_map_data):
     # Charger ID - Charger Type Mapping
     df["charger_type"] = df.apply(lambda row: charger_names[int(row["type"])], axis=1)
 
+    # If latitude and longitude are not present or empty string, drop the row
+    df = df.dropna(subset=["latitude", "longitude"])
+    df = df[df["latitude"] != ""]
+    df = df[df["longitude"] != ""]
+
     # Create coords column using lat and lng
     df["coords"] = list(zip(df["latitude"], df["longitude"]))
 
@@ -31,7 +38,9 @@ def process_data(charger_map_data):
     return df
 
 
+# -------------------------------------------------- 
 # MAPS HELPERS
+# --------------------------------------------------
 
 '''
 Take a city name and return the coordinates of the city
@@ -58,18 +67,18 @@ def euclidean_distance(point1, point2):
 Find n closest points to x from list Y
 '''
 def find_closest_points(x, Y, n):
-    x = [float(i) for i in x.split(', ')]
-
     distances = []
-    for point in Y:
+    for y in Y:
+        idx = y[0]
+        point = (float(y[1]), float(y[2]))
         distance = euclidean_distance(x, point)
-        distances.append((distance, point))
-
+        distances.append((idx, distance))
+    
     # Sort based on distance
-    distances.sort(key = lambda x : x[0])
+    distances.sort(key = lambda x : x[1])
 
-    # Get closest points
-    closest_points = [distance[1] for distance in distances]
+    # Get closest points (indices)
+    closest_points = [distance[0] for distance in distances]
 
     return closest_points[:n]
 
@@ -79,10 +88,8 @@ This function takes in the origin and destination coordinates and returns the di
 '''
 def find_maps_distance(origin, destination, maps_api_key):
     url = f"https://maps.googleapis.com/maps/api/distancematrix/json?origins={origin}&destinations={destination}&units=metric&key={maps_api_key}"
-    response = requests.get(url)
-    data = response.json()
-    distance = data['rows'][0]['elements'][0]['distance']['value'] / 1000
-    return response, distance
+    response = requests.get(url).json()
+    return response
 
 
 '''
@@ -90,36 +97,30 @@ This function takes in a DataFrame, a given coordinate and returns the details o
 coordinates from the DataFrame nearest to the given coordinate. 
 '''
 def find_nearest_coordinate(df, given_coordinate, maps_api_key, n = 5):
-    # Extract latitude and longitude columns from the DataFrame
-    locations = df[['latitude', 'longitude']]
+    # Get closest 20 points (indices) by Euclidean Distance
+    closest_points = find_closest_points(given_coordinate, list(zip(list(df.index), list(df['latitude']), list(df['longitude']))), 20)
 
-    # Get closest 20 points by Euclidean Distance
-    locations = find_closest_points(given_coordinate, list(zip(list(df['latitude']), list(df['longitude']))), 20)
+    # Convert destination coordinate to string
+    origin = str(given_coordinate[0]) + ',' + str(given_coordinate[1])
 
-    # Calculate the distances using the Google Maps Distance Matrix API
+    # Values to be returned
+    indices = []
+    addresses = []
     distances = []
-    response_texts = []
-    for index, row in enumerate(locations):
-        origin = f"{row[0]},{row[1]}"
-        destination = given_coordinate
+    durations = []
+
+    # Get distance and duration from origin to each of the closest points using Google Maps API
+    for point in closest_points:
+        destination = str(df.loc[point]['latitude']) + ',' + str(df.loc[point]['longitude'])
+        response = find_maps_distance(origin, destination, maps_api_key)
+
+        address = "".join(response['destination_addresses'])
+        distance = response['rows'][0]['elements'][0]['distance']['text']
+        duration = response['rows'][0]['elements'][0]['duration']['text']
         
-        response, distance = find_maps_distance(origin, destination, maps_api_key)
-        
-        distances.append((index, distance))
-        response_texts.append(response.text)
+        indices.append(point)
+        addresses.append(address)
+        distances.append(distance)
+        durations.append(duration)
 
-    distances.sort(key = lambda x : x[1])
-
-    # Find the index of the coordinate with the least distance
-    min_distance_indices = [distance[0] for distance in distances[:n]]
-
-    # Return the details and response.text of the nearest coordinate
-    nearest_coordinate_details = []
-    nearest_coordinate_distances = []
-    nearest_coordinate_responses = []
-    
-    for min_distance_index in min_distance_indices:
-        nearest_coordinate_details.append(df.iloc[min_distance_index])
-        nearest_coordinate_distances.append(distances[min_distance_index][1])
-        nearest_coordinate_responses.append(response_texts[min_distance_index])
-    return nearest_coordinate_details, nearest_coordinate_distances, nearest_coordinate_responses
+    return indices[:n], distances[:n], durations[:n], addresses[:n]
