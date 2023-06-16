@@ -4,6 +4,7 @@ import os
 import math
 import folium
 
+import streamlit as st
 import streamlit_folium as st_folium
 import pandas as pd
 
@@ -44,6 +45,9 @@ def process_data(charger_map_data):
 # -------------------------------------------------- 
 # MAPS HELPERS
 # --------------------------------------------------
+
+# Get Google Maps API Key
+maps_api_key = os.environ.get("GOOGLE_API_KEY")
 
 '''
 Take a city name and return the coordinates of the city
@@ -160,3 +164,21 @@ def display_city_chargers(df, city):
 
     # Render Folium map in Streamlit
     return st_folium.st_folium(map, width=725)
+
+def display_chargers_by_location(df, location):
+    # Get coordinates of the location
+    given_coordinate = get_coordinates(location)
+
+    # Get nearest chargers
+    indices, distances, durations, addresses = find_nearest_coordinate(
+        df, given_coordinate, maps_api_key, 
+    )
+
+    # Display chargers
+    for idx, distance, duration, address in zip(indices, distances, durations, addresses):
+        st.write(f"Index: {idx}")
+        st.write(f"Distance: {distance}")
+        st.write(f"Duration: {duration}")
+        st.write(f"Address: {address}")
+        st.write(f"Charger Type: {df.loc[idx]['charger_type']}")
+        st.write()

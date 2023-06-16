@@ -1,7 +1,7 @@
 import streamlit as st
 
 from charger_data import charger_map_data, states, cities
-from helper_functions import display_city_chargers, process_data, get_coordinates
+from helper_functions import display_chargers_by_location, display_city_chargers, process_data, get_coordinates
 
 def chargers_by_city_view():
     df = process_data(charger_map_data)
@@ -22,5 +22,11 @@ def chargers_by_city_view():
     if city:
         display_city_chargers(df, city)
 
-def charger_by_location_view():
-    st.write("Chargers by location view")
+def chargers_by_location_view():
+    df = process_data(charger_map_data)
+
+    # user input to enter the location
+    location = st.text_input("Enter your location")
+
+    if location:
+        display_chargers_by_location(df, location)
