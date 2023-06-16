@@ -2,11 +2,14 @@ import json
 import requests
 import os
 import math
+import folium
 
-from geopy.geocoders import Nominatim
+import streamlit_folium as st_folium
 import pandas as pd
 
-from charger_data import charger_names, correct_states_map
+from geopy.geocoders import Nominatim
+
+from charger_data import charger_names, correct_states_map, color_map
 
 # --------------------------------------------------
 # DATA HELPERS
@@ -124,3 +127,27 @@ def find_nearest_coordinate(df, given_coordinate, maps_api_key, n = 5):
         durations.append(duration)
 
     return indices[:n], distances[:n], durations[:n], addresses[:n]
+
+'''
+Take a dataframe and city name as input and display the chargers in that city
+'''
+def display_city_chargers(df, city):
+    # Generate a map centered at city
+    city_coords = get_coordinates(city)
+    map = folium.Map(location=city_coords, zoom_start=15)
+
+    # Visualize the chargers on the map
+    for i, row in df.iterrows():
+        color = color_map[row.charger_type]
+
+        coords_x, coords_y = df.loc[i, "coords"]
+        if coords_x:
+            coords_x = round(float(coords_x), 4)
+        if coords_y:
+            coords_y = round(float(coords_y), 4)
+            folium.Marker(location=df.loc[i, "coords"], icon=folium.Icon(color=color)).add_to(
+                map
+            )
+
+    # Render Folium map in Streamlit
+    return st_folium.st_folium(map, width=725)
