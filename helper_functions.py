@@ -132,12 +132,18 @@ def find_nearest_coordinate(df, given_coordinate, maps_api_key, n = 5):
 Take a dataframe and city name as input and display the chargers in that city
 '''
 def display_city_chargers(df, city):
-    # Filter the dataframe to only include chargers in the city
+    # Filter the dataframe to only include chargers in the cities
     df = df[df["city"].isin(city)]
 
-    # Generate a map centered at city
-    city_coords = get_coordinates(city)
-    map = folium.Map(location=city_coords, zoom_start=15)
+    # If there is only one city, generate a map centered at the city
+    if len(city) == 1:
+        center_coords = get_coordinates(city)
+        zoom_start = 10
+    # If there are multiple cities, generate a map centered at India
+    else:
+        center_coords = (22.845137, 78.672679)
+        zoom_start = 5
+    map = folium.Map(location=center_coords, zoom_start=zoom_start)
 
     # Visualize the chargers on the map
     for i, row in df.iterrows():

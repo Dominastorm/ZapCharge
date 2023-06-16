@@ -21,3 +21,6 @@ def chargers_by_city_view():
 
     if city:
         display_city_chargers(df, city)
+
+def charger_by_location_view():
+    st.write("Chargers by location view")
