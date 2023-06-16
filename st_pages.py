@@ -3,7 +3,7 @@ import streamlit as st
 from charger_data import charger_map_data, states, cities
 from helper_functions import display_city_chargers, process_data, get_coordinates
 
-def map_view():
+def chargers_by_city_view():
     df = process_data(charger_map_data)
 
     # Choose state
