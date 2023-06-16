@@ -10,7 +10,7 @@ import pandas as pd
 
 from geopy.geocoders import Nominatim
 
-from charger_data import charger_names, correct_states_map, color_map
+from charger_data import charger_names, correct_states_map, color_map, charger_map_data
 
 # --------------------------------------------------
 # DATA HELPERS
@@ -45,9 +45,6 @@ def process_data(charger_map_data):
 # -------------------------------------------------- 
 # MAPS HELPERS
 # --------------------------------------------------
-
-# Get Google Maps API Key
-maps_api_key = os.environ.get("GOOGLE_API_KEY")
 
 '''
 Take a city name and return the coordinates of the city
@@ -103,7 +100,13 @@ def find_maps_distance(origin, destination, maps_api_key):
 This function takes in a DataFrame, a given coordinate and returns the details of the
 coordinates from the DataFrame nearest to the given coordinate. 
 '''
-def find_nearest_coordinate(df, given_coordinate, maps_api_key, n = 5):
+def find_nearest_coordinate(given_coordinate, maps_api_key, n = 5):
+    # Get Google Maps API Key
+    maps_api_key = os.environ.get("GOOGLE_API_KEY")
+
+    # Create DataFrame by processing the data
+    df = process_data(charger_map_data)
+
     # Get closest 20 points (indices) by Euclidean Distance
     closest_points = find_closest_points(given_coordinate, list(zip(list(df.index), list(df['latitude']), list(df['longitude']))), 20)
 
@@ -135,7 +138,13 @@ def find_nearest_coordinate(df, given_coordinate, maps_api_key, n = 5):
 '''
 Take a dataframe and city name as input and display the chargers in that city
 '''
-def display_city_chargers(df, city):
+def display_city_chargers(city):
+    # Get Google Maps API Key
+    maps_api_key = os.environ.get("GOOGLE_API_KEY")
+
+    # Create DataFrame by processing the data
+    df = process_data(charger_map_data)
+
     # Filter the dataframe to only include chargers in the cities
     df = df[df["city"].isin(city)]
 
@@ -165,13 +174,19 @@ def display_city_chargers(df, city):
     # Render Folium map in Streamlit
     return st_folium.st_folium(map, width=725)
 
-def display_chargers_by_location(df, location):
+def display_chargers_by_location(location):
+    # Get Google Maps API Key
+    maps_api_key = os.environ.get("GOOGLE_API_KEY")
+
+    # Create DataFrame by processing the data
+    df = process_data(charger_map_data)
+    
     # Get coordinates of the location
     given_coordinate = get_coordinates(location)
 
     # Get nearest chargers
     indices, distances, durations, addresses = find_nearest_coordinate(
-        df, given_coordinate, maps_api_key, 
+        given_coordinate, maps_api_key, 
     )
 
     # Display chargers

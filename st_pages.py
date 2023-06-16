@@ -1,11 +1,9 @@
 import streamlit as st
 
 from charger_data import charger_map_data, states, cities
-from helper_functions import display_chargers_by_location, display_city_chargers, process_data, get_coordinates
+from helper_functions import display_chargers_by_location, display_city_chargers
 
 def chargers_by_city_view():
-    df = process_data(charger_map_data)
-
     # Choose state
     state_choices = st.multiselect("Choose State", states)
 
@@ -20,13 +18,11 @@ def chargers_by_city_view():
         st.write("Choose a state to see the cities")
 
     if city:
-        display_city_chargers(df, city)
+        display_city_chargers(city)
 
 def chargers_by_location_view():
-    df = process_data(charger_map_data)
-
     # user input to enter the location
     location = st.text_input("Enter your location")
 
     if location:
-        display_chargers_by_location(df, location)
+        display_chargers_by_location(location)
