@@ -139,9 +139,6 @@ def find_nearest_coordinate(given_coordinate, maps_api_key, n = 5):
 Take a dataframe and city name as input and display the chargers in that city
 '''
 def display_city_chargers(city):
-    # Get Google Maps API Key
-    maps_api_key = os.environ.get("GOOGLE_API_KEY")
-
     # Create DataFrame by processing the data
     df = process_data(charger_map_data)
 
@@ -189,11 +186,31 @@ def display_chargers_by_location(location):
         given_coordinate, maps_api_key, 
     )
 
+    display_chargers_df = []
+
     # Display chargers
+    map = folium.Map(location=given_coordinate, zoom_start=10)
     for idx, distance, duration, address in zip(indices, distances, durations, addresses):
-        st.write(f"Index: {idx}")
-        st.write(f"Distance: {distance}")
-        st.write(f"Duration: {duration}")
-        st.write(f"Address: {address}")
-        st.write(f"Charger Type: {df.loc[idx]['charger_type']}")
-        st.write()
+        color = color_map[df.loc[idx, "charger_type"]]
+
+        coords_x, coords_y = df.loc[idx, "coords"]
+        if coords_x:
+            coords_x = round(float(coords_x), 4)
+        if coords_y:
+            coords_y = round(float(coords_y), 4)
+            folium.Marker(location=df.loc[idx, "coords"], icon=folium.Icon(color=color)).add_to(
+                map
+            )
+        
+        # Add values to display_chargers_df
+        display_chargers_df.append({
+            "Index": idx,
+            "Distance": distance,
+            "Duration": duration,
+            "Address": address,
+            "Charger Type": df.loc[idx]["charger_type"]
+        })
+        
+    st_folium.st_folium(map, width=725)
+    st.dataframe(pd.DataFrame(display_chargers_df))
+    

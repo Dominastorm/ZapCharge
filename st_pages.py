@@ -21,7 +21,7 @@ def chargers_by_city_view():
         display_city_chargers(city)
 
 def chargers_by_location_view():
-    # user input to enter the location
+    # User input to enter the location
     location = st.text_input("Enter your location")
 
     if location:
