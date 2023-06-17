@@ -1,7 +1,7 @@
 import streamlit as st
 
 from charger_data import states, cities
-from helper_functions import display_chargers_by_location, display_city_chargers, display_user_requested_chargers
+from helper_functions import display_chargers_by_location, display_city_chargers, display_charger_consumption_data, display_user_requested_chargers
 
 def chargers_by_city_view():
     st.write("## Chargers by City")
@@ -89,3 +89,9 @@ def display_heatmap_info():
         st.image('heatmap/heatmap.png', caption="Heatmap")
     with col2:
         st.image('heatmap/blr_heatmap2.png', caption="Heatmap Imposed on Map")
+
+def charger_consumption_data_view():
+    st.write("## Consumption Data")
+    
+
+    display_charger_consumption_data()

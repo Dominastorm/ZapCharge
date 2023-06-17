@@ -8,6 +8,7 @@ import streamlit as st
 import streamlit_folium as st_folium
 import pandas as pd
 import numpy as np
+import polars as pl
 
 
 from haversine import haversine
@@ -347,3 +348,56 @@ def display_user_requested_chargers():
     
     st_folium.st_folium(density_based_clusters_map_1, width=725, key="density_based_clusters_map")
 
+def st_filter_template(df, attribute, default_all=False):
+    container = st.container()
+    all = st.checkbox(f"Select all {attribute}", value=default_all)
+    values = list(df[attribute].unique().sort())
+
+    if all:
+        selected_options = container.multiselect(
+            "Select one or more options:", values, values
+        )
+    else:
+        selected_options = container.multiselect("Select one or more options:", values)
+    return selected_options
+
+
+'''
+
+'''
+def display_charger_consumption_data():
+    data = pl.read_csv("charger_consumption_data.csv")
+
+    # Hide Columns
+    hide_columns = st.multiselect("Choose columns to hide", data.columns, default=[])
+
+    # Filter Columns
+    # TODO: Add support for datatypes other than categorical
+    filter_columns = st.multiselect(
+        "Choose columns to filter", data.columns, default=[]
+    )
+    filters = {}
+    for column in filter_columns:
+        filters[column] = st_filter_template(data, column)
+    for column, values in filters.items():
+        data = data.filter(pl.col(column).is_in(values))
+
+    data = data.drop(hide_columns).to_pandas()
+    st.dataframe(data)
+
+    # Pivot Table
+    st.write("Pivot Table")
+    pivot = {"index": [], "values": [], "columns": [], "aggfunc": "mean"}
+    pivot["index"] = st.multiselect("Choose Index", data.columns, default=[])
+    pivot["values"] = st.multiselect("Choose values", data.columns, default=[])
+    pivot["columns"] = st.multiselect("Choose columns", data.columns, default=[])
+    if pivot["index"] and pivot["values"] and pivot["columns"]:
+        st.dataframe(
+            pd.pivot_table(
+                data,
+                index=pivot["index"],
+                values=pivot["values"],
+                columns=pivot["columns"],
+                aggfunc=pivot["aggfunc"],
+            )
+        )
