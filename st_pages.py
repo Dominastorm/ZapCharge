@@ -33,6 +33,7 @@ def chargers_by_location_view():
     location = st.text_input("Enter your location")
 
     if location:
+        st.success("Hover over the chargers to view charger company and click on them to see the distance and duration to reach (Entered location is shown in red)")
         display_chargers_by_location(location)
 
 def user_requested_chargers_view():
