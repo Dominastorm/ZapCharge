@@ -21,7 +21,7 @@ Process the charger map data and return a dataframe
 '''
 def process_data():
     # Read file containing location details
-    df = pd.read_json('final.json')
+    df = pd.read_json('charger_map_data.json')
 
     # If latitude and longitude are not present or empty string, drop the row
     df = df.dropna(subset=["latitude", "longitude"])
