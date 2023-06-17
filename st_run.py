@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 
 from st_pages import chargers_by_city_view, chargers_by_location_view, user_requested_chargers_view
+from heatmap import display_heatmap_info
 
 page_config = st.set_page_config(
     page_title="Home",
@@ -26,3 +27,5 @@ elif selected == "Chargers by Location":
     chargers_by_location_view()
 elif selected == "User Requested Chargers":
     user_requested_chargers_view()
+elif selected == "Traffic Heatmap Chargers":
+    display_heatmap_info()
