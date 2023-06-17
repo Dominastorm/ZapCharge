@@ -14,7 +14,7 @@ st.markdown(st_style, unsafe_allow_html=True)
 selected = option_menu(
     menu_title="ZapCharge",
     menu_icon="lightning-charge-fill",
-    options=["Chargers by City", "Chargers by Location", "User Requested Chargers", "Traffic Heatmap Chargers"],
+    options=["Chargers by City", "Chargers by Location", "User Requested Chargers", "Traffic Heatmap"],
     icons=["ev-station-fill", "pin-map-fill",  "people-fill", "stoplights-fill"], # icons from https://icons.getbootstrap.com/
     default_index=0,
     orientation="horizontal",
@@ -26,5 +26,5 @@ elif selected == "Chargers by Location":
     chargers_by_location_view()
 elif selected == "User Requested Chargers":
     user_requested_chargers_view()
-elif selected == "Traffic Heatmap Chargers":
+elif selected == "Traffic Heatmap":
     display_heatmap_info()

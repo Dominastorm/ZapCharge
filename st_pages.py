@@ -4,6 +4,9 @@ from charger_data import states, cities
 from helper_functions import display_chargers_by_location, display_city_chargers, display_user_requested_chargers
 
 def chargers_by_city_view():
+    st.write("## Chargers by City")
+    st.write("##### This view lets you select the states and the cities present in them and displays the EV chargers present in the selected cities.")
+
     # Choose state
     state_choices = st.multiselect("Choose State", states)
 
@@ -21,6 +24,9 @@ def chargers_by_city_view():
         display_city_chargers(city)
 
 def chargers_by_location_view():
+    st.write("## Chargers by Location")
+    st.write("##### This view lets you enter any location in India and displays the 5 closest EV chargers and their details.")
+
     # User input to enter the location
     location = st.text_input("Enter your location")
 
@@ -28,27 +34,31 @@ def chargers_by_location_view():
         display_chargers_by_location(location)
 
 def user_requested_chargers_view():
+    st.write("## User Requested Chargers")
+
     display_user_requested_chargers()
 
 def display_heatmap_info():
-    st.title("Traffic Heatmap ")
+    st.write("## Traffic Heatmap ")
 
     sample_map_image1 = "heatmap/Map_images/Original_map_images/Sun_8.png"
     sample_map_image2 = "heatmap/Map_images/Original_map_images/fri_20.png"
 
     st.write("##### The heatmap below shows the traffic data patterns in each city. The darker the color, the more traffic in that city. ")
+    st.image('heatmap/blr_heatmap2.png', caption="Heatmap Imposed on Map", width=1080)
 
-    st.header("Bulding the Heatmap")
+    st.write("### Bulding the Heatmap - Google Maps API")
 
-    st.write("##### Since there was no ready made heatmap or publically available traffic data, we created our own heatmap using Google maps historical data.")
+    st.write("##### Since there was no ready made heatmap or publically available traffic data, we created our own heatmap using Google Maps historical data.")
+    st.write("##### We used the Google Maps API to get the traffic data for different time periods on different days of the week. For example, here, you can observe the difference in traffic on a Sunday morning and the traffic on a Friday evening.")
 
-    st.subheader("Google Maps Data")
     col1, col2 = st.columns(2)
     with col1:
         st.image(sample_map_image1, caption="Traffic on a Sunday Morning")
     with col2:
         st.image(sample_map_image2, caption="Traffic on a Friday Evening")
 
+    
     st.subheader("Road traffic extraction")
     st.write("##### Extracting just the roads from the map was a challenge. We used OpenCV to extract the roads from the map for each time periods on different days. We then used the extracted roads to create a mask for the heatmap.")
 
@@ -63,10 +73,10 @@ def display_heatmap_info():
 
     st.subheader("Traffic data combination")
     st.write("##### After the extraction of road traffic data for multile time periods for every day of the week, we combined these images to provide us with the data where the traffic in concentrated")
-    st.image('heatmap/blended.png', caption="Combined traffic data")
+    st.image('heatmap/blended.png', caption="Combined traffic data", width=1080)
 
     st.write("##### Now the common areas of heaby traffic are isolated and extracted. We then used this image to create a mask for the heatmap.")
-    st.image('heatmap/traffic_data.png', caption="Isolated traffic data")
+    st.image('heatmap/traffic_data.png', caption="Isolated traffic data", width=1080)
 
     st.subheader("Heatmap creation")
     st.write("##### We then used the isolated traffic data to create a heatmap. The darker the color, the more traffic in that city. ")

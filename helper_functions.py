@@ -237,7 +237,6 @@ def display_user_requested_chargers():
     # Read csv file containing user requested chargers
     df = pd.read_csv("user_requested_chargers.csv")
     
-    st.write("### User Requests")
     city_coords = (12.927643, 77.581590)
     colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'darkpurple', 'white', 'pink', 'lightblue', 'lightgreen', 'black']
     n = len(colors)
