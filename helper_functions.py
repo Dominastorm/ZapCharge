@@ -192,14 +192,28 @@ def display_chargers_by_location(location):
     for idx, distance, duration, address in zip(indices, distances, durations, addresses):
         color = color_map[df.loc[idx, "charger_type"]]
 
+        # Create Popups
+        invisible_character = "⠀"
+        popup_distance = invisible_character.join(distance.split(" "))
+        popup_duration = invisible_character.join(duration.split(" "))
+
         coords_x, coords_y = df.loc[idx, "coords"]
         if coords_x:
             coords_x = round(float(coords_x), 4)
         if coords_y:
             coords_y = round(float(coords_y), 4)
-            folium.Marker(location=df.loc[idx, "coords"], icon=folium.Icon(color=color)).add_to(
-                map
-            )
+            folium.Marker(location=df.loc[idx, "coords"],
+                          icon=folium.Icon(color=color),
+                          tooltip=df.loc[idx, "charger_type"],
+                          popup=f"{popup_distance}\n {popup_duration}").add_to(map)
+        
+        # Add entered location to map in white color
+        folium.Marker(location=given_coordinate,
+                      icon=folium.Icon(color="red"),
+                      tooltip="Entered Location",
+                      popup=location
+                     ).add_to(map)
+
         
         # Add values to display_chargers_df
         display_chargers_df.append({
@@ -241,7 +255,7 @@ def display_user_requested_chargers():
     df = pd.read_csv("user_requested_chargers.csv")
 
     city_coords = (12.927643, 77.581590)
-    colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'darkpurple', 'white', 'pink', 'lightblue', 'lightgreen', 'black']
+    colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'darkpurple', 'pink', 'lightblue', 'lightgreen', 'black']
     n = len(colors)
 
     coordinates = df.values.tolist()

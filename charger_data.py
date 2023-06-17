@@ -593,7 +593,7 @@ charger_names = {
 
 # Charger Type - Color Mapping
 color_map = {
-    "Community Bus": "red",
+    "Community Bus": "cadetblue",
     "Community Home": "purple",
     "Ather": "beige",
     "Tata Power": "black",
@@ -609,5 +609,5 @@ color_map = {
     "Chargegrid": "gray",
     "FORTUM": "green",
     "BPCL": "orange",
-    "Others": "white",
+    "Others": "red",
 }
