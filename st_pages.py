@@ -5,7 +5,8 @@ from helper_functions import display_chargers_by_location, display_city_chargers
 
 def chargers_by_city_view():
     st.write("## Chargers by City")
-    st.write("##### This view lets you select the states and the cities present in them and displays the EV chargers present in the selected cities.")
+    st.write("##### This view lets the user select the states and the cities present in them and displays the EV chargers present in the selected cities. It provides a good understanding of the current state of the EV charging network.") 
+    st.warning("###### Choose the states and their respective cities to view the chargers present in them. You can choose multiple states and cities.")
 
     # Choose state
     state_choices = st.multiselect("Choose State", states)
@@ -25,7 +26,7 @@ def chargers_by_city_view():
 
 def chargers_by_location_view():
     st.write("## Chargers by Location")
-    st.write("##### This view lets you enter any location in India and displays the 5 closest EV chargers and their details.")
+    st.write("##### This view lets ther enter any location in India and displays the 5 closest EV chargers and their details. This can be very helpful when an EV user is running out of charge and needs to find the closest EV charger.")
 
     # User input to enter the location
     location = st.text_input("Enter your location")
