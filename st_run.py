@@ -17,7 +17,7 @@ selected = option_menu(
     options=["Chargers by City", "Chargers by Location", "User Requested Chargers", "Traffic Heatmap", "Charger Consumption Data"],
     icons=["ev-station-fill", "pin-map-fill",  "people-fill", "stoplights-fill", "lightning-charge-fill"], # icons from https://icons.getbootstrap.com/
     default_index=0,
-    orientation="horizontal",
+    orientation="vertical",
 )
 
 if selected == "Chargers by City":
