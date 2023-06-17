@@ -4,7 +4,7 @@ from streamlit_option_menu import option_menu
 from st_pages import chargers_by_city_view, chargers_by_location_view, charger_consumption_data_view, user_requested_chargers_view, display_heatmap_info
 
 page_config = st.set_page_config(
-    page_title="Home",
+    page_title="ZapCharge",
     layout="wide",
 )
 
