@@ -387,10 +387,11 @@ def display_charger_consumption_data():
 
     # Pivot Table
     st.write("Pivot Table")
-    pivot = {"index": [], "values": [], "columns": [], "aggfunc": "mean"}
+    pivot = {"index": [], "values": [], "columns": [], "aggfunc": ""}
     pivot["index"] = st.multiselect("Choose Index", data.columns, default=[])
     pivot["values"] = st.multiselect("Choose values", data.columns, default=[])
     pivot["columns"] = st.multiselect("Choose columns", data.columns, default=[])
+    pivot["aggfunc"] = st.selectbox("Choose aggregation function", ["mean", "sum"], index=0)
     if pivot["index"] and pivot["values"] and pivot["columns"]:
         st.dataframe(
             pd.pivot_table(
