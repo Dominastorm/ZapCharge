@@ -10,7 +10,7 @@ import pandas as pd
 
 from geopy.geocoders import Nominatim
 
-from charger_data import charger_names, correct_states_map, color_map, charger_map_data
+from charger_data import color_map
 
 # --------------------------------------------------
 # DATA HELPERS
@@ -19,14 +19,9 @@ from charger_data import charger_names, correct_states_map, color_map, charger_m
 '''
 Process the charger map data and return a dataframe
 '''
-def process_data(charger_map_data):
-    charger_map_data = json.loads(charger_map_data)
-
+def process_data():
     # Read file containing location details
-    df = pd.DataFrame.from_dict(charger_map_data)
-
-    # Charger ID - Charger Type Mapping
-    df["charger_type"] = df.apply(lambda row: charger_names[int(row["type"])], axis=1)
+    df = pd.read_json('final.json')
 
     # If latitude and longitude are not present or empty string, drop the row
     df = df.dropna(subset=["latitude", "longitude"])
@@ -35,9 +30,6 @@ def process_data(charger_map_data):
 
     # Create coords column using lat and lng
     df["coords"] = list(zip(df["latitude"], df["longitude"]))
-
-    # Apply the correct_map to the states in df
-    df["state"] = df["state"].apply(lambda x: correct_states_map[x] if x in correct_states_map else x)
 
     return df
 
@@ -105,7 +97,7 @@ def find_nearest_coordinate(given_coordinate, maps_api_key, n = 5):
     maps_api_key = os.environ.get("GOOGLE_API_KEY")
 
     # Create DataFrame by processing the data
-    df = process_data(charger_map_data)
+    df = process_data()
 
     # Get closest 20 points (indices) by Euclidean Distance
     closest_points = find_closest_points(given_coordinate, list(zip(list(df.index), list(df['latitude']), list(df['longitude']))), 20)
@@ -140,7 +132,7 @@ Take a dataframe and city name as input and display the chargers in that city
 '''
 def display_city_chargers(city):
     # Create DataFrame by processing the data
-    df = process_data(charger_map_data)
+    df = process_data()
 
     # Filter the dataframe to only include chargers in the cities
     df = df[df["city"].isin(city)]
@@ -176,7 +168,7 @@ def display_chargers_by_location(location):
     maps_api_key = os.environ.get("GOOGLE_API_KEY")
 
     # Create DataFrame by processing the data
-    df = process_data(charger_map_data)
+    df = process_data()
     
     # Get coordinates of the location
     given_coordinate = get_coordinates(location)
@@ -204,7 +196,6 @@ def display_chargers_by_location(location):
         
         # Add values to display_chargers_df
         display_chargers_df.append({
-            "Index": idx,
             "Distance": distance,
             "Duration": duration,
             "Address": address,
