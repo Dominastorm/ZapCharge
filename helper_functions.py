@@ -160,7 +160,10 @@ def display_city_chargers(city):
             coords_x = round(float(coords_x), 4)
         if coords_y:
             coords_y = round(float(coords_y), 4)
-            folium.Marker(location=df.loc[i, "coords"], icon=folium.Icon(color=color)).add_to(
+            folium.Marker(location=df.loc[i, "coords"],
+                          icon=folium.Icon(color=color),
+                          tooltip=df.loc[i, "charger_type"],
+                          popup=df.loc[i, "address"]).add_to(
                 map
             )
 

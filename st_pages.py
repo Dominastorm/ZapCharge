@@ -22,6 +22,7 @@ def chargers_by_city_view():
         st.write("Choose a state to see the cities")
 
     if city:
+        st.success("Hover over the chargers to view charger company and click on them to see the address")
         display_city_chargers(city)
 
 def chargers_by_location_view():
