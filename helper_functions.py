@@ -7,8 +7,12 @@ import folium
 import streamlit as st
 import streamlit_folium as st_folium
 import pandas as pd
+import numpy as np
 
+
+from haversine import haversine
 from geopy.geocoders import Nominatim
+from sklearn.cluster import DBSCAN
 
 from charger_data import color_map
 
@@ -204,4 +208,91 @@ def display_chargers_by_location(location):
         
     st_folium.st_folium(map, width=725)
     st.dataframe(pd.DataFrame(display_chargers_df))
+
+
+'''
+Using points and specified radius, forms clusters based on density
+'''
+def cluster_by_distance(points, radius):
+    distances = []
+    n = len(points)
+    for i in range(n):
+        distances.append([])
+        for j in range(i + 1, n):
+            distances[-1].append(haversine(points[i], points[j])) #unit is km
+
+    # visited = [0]*n
+    clusters = []
+    for i in range(n):
+        clusters.append([])
+        count = 0
+        for d in distances[i]:
+            count += 1
+            if d <= radius:
+                clusters[-1].append(points[i+count])
+
+    return clusters
+
+def display_user_requested_chargers():
+    # Read csv file containing user requested chargers
+    df = pd.read_csv("user_requested_chargers.csv")
     
+    st.write("### User Requests")
+    city_coords = (12.927643, 77.581590)
+    colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'darkpurple', 'white', 'pink', 'lightblue', 'lightgreen', 'black']
+    n = len(colors)
+
+    coordinates = df.values.tolist()
+
+    user_requests_map = folium.Map(location=city_coords, zoom_start=12, control_scale = True)
+    for latitude, longitude in coordinates:
+        folium.Marker(location=(latitude, longitude), icon=folium.Icon()).add_to(user_requests_map)
+    
+    st_folium.st_folium(user_requests_map, width=725, key="user_requests_map")
+
+    st.write("### Clusters formed based on distances (Conventional Clustering)")
+
+    radius, min_samples = 0.5, 15
+    clusters_1 = [x for x in cluster_by_distance(coordinates.copy(), radius) if len(x) >= min_samples]
+    distance_based_clusters_map = folium.Map(location=city_coords, zoom_start=12)
+    for i in range(len(clusters_1)):
+        cluster = clusters_1[i]
+        color = colors[i % n]
+        for point in cluster:
+            x, y = point[0], point[1]
+            folium.Marker(location= (x, y), icon=folium.Icon(color=color)).add_to(distance_based_clusters_map)
+
+    st_folium.st_folium(distance_based_clusters_map, width=725, key="distance_based_clusters_map")
+
+    st.write("### Clusters formed based on densities (DBSCAN Algorithm)")
+
+    epsilon = 0.5 / 6371.0
+    min_samples = 15
+    db = DBSCAN(eps=epsilon, min_samples=min_samples, algorithm='ball_tree', metric='haversine').fit(np.radians(df.to_numpy()))
+    labels = db.labels_
+    density_based_clusters_map = folium.Map(location=city_coords, zoom_start=12, control_scale = True)
+    for i in range(len(labels)):
+        if labels[i] == -1:
+            color = 'lightgray'
+            folium.Marker(location= coordinates[i], icon=folium.Icon(color=color)).add_to(density_based_clusters_map)
+
+        else:
+            color = colors[labels[i] % n]
+            folium.Marker(location= coordinates[i], icon=folium.Icon(color=color)).add_to(density_based_clusters_map)
+    
+    st_folium.st_folium(density_based_clusters_map, width=725, key="density_based_clusters_map")
+
+
+    st.write("### Removing points not part of any cluster ")
+
+    density_based_clusters_map_1 = folium.Map(location=city_coords, zoom_start=12, control_scale = True)
+    for i in range(len(labels)):
+        if labels[i] == -1:
+            continue
+
+        else:
+            color = colors[labels[i] % n]
+            folium.Marker(location= coordinates[i], icon=folium.Icon(color=color)).add_to(density_based_clusters_map_1)
+    
+    st_folium.st_folium(density_based_clusters_map_1, width=725, key="density_based_clusters_map")
+
