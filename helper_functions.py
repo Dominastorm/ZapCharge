@@ -368,6 +368,9 @@ def st_filter_template(df, attribute, default_all=False):
 def display_charger_consumption_data():
     data = pl.read_csv("charger_consumption_data.csv")
 
+    # Drop the first column
+    data = data.drop("")
+
     # Hide Columns
     hide_columns = st.multiselect("Choose columns to hide", data.columns, default=[])
 
@@ -385,12 +388,16 @@ def display_charger_consumption_data():
     data = data.drop(hide_columns).to_pandas()
     st.dataframe(data)
 
+    # Add a column having values just 1
+    data["count"] = 1
+
     # Pivot Table
-    st.write("Pivot Table")
-    pivot = {"index": [], "values": [], "columns": [], "aggfunc": ""}
-    pivot["index"] = st.multiselect("Choose Index", data.columns, default=[])
-    pivot["values"] = st.multiselect("Choose values", data.columns, default=[])
-    pivot["columns"] = st.multiselect("Choose columns", data.columns, default=[])
+    st.write("### Pivot Table")
+    st.write("##### Users can create pivot tables according to their needs by selecting the index, values, columns and aggregation function.")
+    st.write("##### For example, if you want to see the average uptime of each chargers with rating type 2, you can select the index as charger_type, values as uptime, columns as type_2_rating and aggregation function as mean.")
+    pivot = {"index": "charger_type", "values": [], "columns": [], "aggfunc": ""}
+    pivot["values"] = st.multiselect("Choose values", data.columns, default=["daily_usage_2"])
+    pivot["columns"] = st.multiselect("Choose columns", data.columns, default=["type_2_rating"])
     pivot["aggfunc"] = st.selectbox("Choose aggregation function", ["mean", "sum"], index=0)
     if pivot["index"] and pivot["values"] and pivot["columns"]:
         st.dataframe(
