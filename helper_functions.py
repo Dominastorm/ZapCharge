@@ -189,6 +189,7 @@ def display_chargers_by_location(location):
 
     # Display chargers
     map = folium.Map(location=given_coordinate, zoom_start=10)
+    i = 0
     for idx, distance, duration, address in zip(indices, distances, durations, addresses):
         color = color_map[df.loc[idx, "charger_type"]]
 
@@ -205,8 +206,9 @@ def display_chargers_by_location(location):
             folium.Marker(location=df.loc[idx, "coords"],
                           icon=folium.Icon(color=color),
                           tooltip=df.loc[idx, "charger_type"],
-                          popup=f"{popup_distance}\n {popup_duration}").add_to(map)
-        
+                          popup=f"{i}\n{popup_distance}\n{popup_duration}").add_to(map)
+        i += 1
+
         # Add entered location to map in white color
         folium.Marker(location=given_coordinate,
                       icon=folium.Icon(color="red"),
