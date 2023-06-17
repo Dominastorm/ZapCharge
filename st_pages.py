@@ -35,7 +35,8 @@ def chargers_by_location_view():
 
 def user_requested_chargers_view():
     st.write("## User Requested Chargers")
-
+    st.write("##### The best way to figure out where the users want chargers is to ask the users themselves. Once the users recommend chargers, we can perform clustering to get the locations of approporiate charger placements.")
+    
     display_user_requested_chargers()
 
 def display_heatmap_info():
