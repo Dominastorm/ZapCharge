@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 import screeninfo
+import platform
 
 from st_pages import chargers_by_city_view, chargers_by_location_view, charger_consumption_data_view, user_requested_chargers_view, display_heatmap_info
 
@@ -13,11 +14,15 @@ st_style = """<style> footer {visibility: hidden;} </style>"""
 st.markdown(st_style, unsafe_allow_html=True)
 
 #  Set orientation of menu based on screen size
-screen = screeninfo.get_monitors()[0]
-if screen.width > screen.height:
-    orientation = "horizontal"
-else:
-    orientation = "vertical"
+# screen = screeninfo.get_monitors()[0]
+# if screen.width > screen.height:
+#     orientation = "horizontal"
+# else:
+#     orientation = "vertical"
+
+orientation="horizontal"
+
+st.write(platform.node)
 
 selected = option_menu(
     menu_title="ZapCharge",
