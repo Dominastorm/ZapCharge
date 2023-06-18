@@ -22,7 +22,7 @@ st.markdown(st_style, unsafe_allow_html=True)
 
 orientation="horizontal"
 
-st.write(platform.node)
+st.write(platform.node())
 
 selected = option_menu(
     menu_title="ZapCharge",
