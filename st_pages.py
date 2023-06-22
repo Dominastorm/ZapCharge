@@ -97,17 +97,17 @@ def charger_consumption_data_view():
     
     st.markdown(
         """
-        <div style='border: 1px solid #e6e6e6; padding: 20px; background-color: #f9f9f9;'>
-            <h3 style='text-align: left;'>Data Key</h3>
+        <div style='border: 1px solid #e6e6e6; padding: 20px; background-color: #262730;'>
+            <h3 style='text-align: left; color: white'>Data Key</h3>
             <ul>
-                <li><b><span style='color:green'>'daily_usage_2'</span></b> and <b><span style='color:green'>'peak_usage_2'</span></b> represent the average and peak usage, respectively, of type 2 chargers in hours.</li>
-                <li><b><span style='color:green'>'daily_usage_3'</span></b> and <b><span style='color:green'>'peak_usage_3'</span></b> represent the average and peak usage, respectively, of type 3 chargers in hours.</li>
-                <li><b><span style='color:green'>'type_2_rating'</span></b> and <b><span style='color:green'>'type_3_rating'</span></b> represent the power consumption rating of type 2 and type 3 chargers in kilowatts (kW).</li>
-                <li><b><span style='color:green'>'type_2_nos'</span></b> and <b><span style='color:green'>'type_3_nos'</span></b> represent the number of operable chargers of type 2 and type 3.</li>
-                <li><b><span style='color:green'>'enerygy_usage'</span></b> represents the total energy consumed by the charging station in kilowatt-hours (kWh) in a day.</li>
-                <li><b><span style='color:green'>'uptime'</span></b>represents the hours since the last maintenance activity at the charging station.</li>
+                <li><span style='color: white'><b><span style='color: green'>'daily_usage_2'</span></b> and <b><span style='color: green'>'peak_usage_2'</span></b> represent the average and peak usage, respectively, of type 2 chargers in hours.</span></li>
+                <li><span style='color: white'><b><span style='color: green'>'daily_usage_3'</span></b> and <b><span style='color: green'>'peak_usage_3'</span></b> represent the average and peak usage, respectively, of type 3 chargers in hours.</span></li>
+                <li><span style='color: white'><b><span style='color: green'>'type_2_rating'</span></b> and <b><span style='color: green'>'type_3_rating'</span></b> represent the power consumption rating of type 2 and type 3 chargers in kilowatts (kW).</span></li>
+                <li><span style='color: white'><b><span style='color: green'>'type_2_nos'</span></b> and <b><span style='color: green'>'type_3_nos'</span></b> represent the number of operable chargers of type 2 and type 3.</span></li>
+                <li><span style='color: white'><b><span style='color: green'>'enerygy_usage'</span></b> represents the total energy consumed by the charging station in kilowatt-hours (kWh) in a day.</span></li>
+                <li><span style='color: white'><b><span style='color: green'>'uptime'</span></b> represents the hours since the last maintenance activity at the charging station.</span></li>
             </ul>
-            <p>These variables provide key insights into the usage patterns, charger capabilities, energy consumption, and maintenance status of an electric vehicle charging station.</p>
+            <p><span style='color: white'>These variables provide key insights into the usage patterns, charger capabilities, energy consumption, and maintenance status of an electric vehicle charging station.</span></p>
         </div>
         """,
         unsafe_allow_html=True
