@@ -34,12 +34,8 @@ def chargers_by_location_view():
 
     if location:
         st.success("Hover over the chargers to view charger company and click on them to see the distance and duration to reach (Entered location is shown in red)")
-        try:
-            display_chargers_by_location(location)
-        except:
-            st.error("This feature require the Google Maps API key. It is not yet supported on the hosted website. You can look at this example to check out the feature.")
-            st.image("sample_chargers_by_location_output.png", caption="Sample output of chargers by location", width=1080)
-
+        display_chargers_by_location(location)
+        
 
 def user_requested_chargers_view():
     st.write("## User Requested Chargers")
