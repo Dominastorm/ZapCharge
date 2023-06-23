@@ -26,7 +26,7 @@ def process_data():
     Process the charger map data and return a dataframe
     '''
     # Read file containing location details
-    df = pd.read_json('charger_map_data.json')
+    df = pd.read_json('data/charger_map_data.json')
 
     # If latitude and longitude are not present or empty string, drop the row
     df = df.dropna(subset=["latitude", "longitude"])
@@ -261,7 +261,7 @@ def display_user_requested_chargers():
     Perform clustering on user requested chargers and display the results
     '''
     # Read csv file containing user requested chargers
-    df = pd.read_csv("user_requested_chargers.csv")
+    df = pd.read_csv("data/user_requested_chargers.csv")
 
     city_coords = (12.9725881014472, 77.59406890113576)
     colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'darkpurple', 'pink', 'lightblue', 'lightgreen', 'black']
@@ -376,7 +376,7 @@ def display_charger_consumption_data():
     '''
     Display an artificially charger consumption dataset with filter and pivot table functionality
     '''
-    data = pl.read_csv("charger_consumption_data.csv")
+    data = pl.read_csv("data/charger_consumption_data.csv")
 
     # Drop the first column
     data = data.drop("")
