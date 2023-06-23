@@ -1,6 +1,6 @@
 import streamlit as st
 
-from charger_data import states, cities
+from data.charger_data import states, cities
 from helper_functions import display_chargers_by_location, display_city_chargers, display_charger_consumption_data, display_user_requested_chargers
 
 def chargers_by_city_view():

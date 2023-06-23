@@ -15,7 +15,7 @@ from haversine import haversine
 from geopy.geocoders import Nominatim
 from sklearn.cluster import DBSCAN
 
-from charger_data import color_map
+from data.charger_data import color_map
 
 # --------------------------------------------------
 # DATA HELPERS
