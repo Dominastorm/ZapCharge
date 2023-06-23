@@ -46,11 +46,11 @@ def user_requested_chargers_view():
 def display_heatmap_info():
     st.write("## Traffic Heatmap ")
 
-    sample_map_image1 = "heatmap/Map_images/Original_map_images/Sun_8.png"
-    sample_map_image2 = "heatmap/Map_images/Original_map_images/fri_20.png"
+    sample_map_image1 = "generation_code/heatmap/Map_images/Original_map_images/Sun_8.png"
+    sample_map_image2 = "generation_code/heatmap/Map_images/Original_map_images/fri_20.png"
 
     st.write("##### The heatmap below shows the traffic data patterns in each city. The darker the color, the more traffic in that city. ")
-    st.image('heatmap/blr_heatmap2.png', caption="Heatmap Imposed on Map", width=1080)
+    st.image('generation_code/heatmap/blr_heatmap2.png', caption="Heatmap Imposed on Map", width=1080)
 
     st.write("### Bulding the Heatmap - Google Maps API")
 
@@ -67,8 +67,8 @@ def display_heatmap_info():
     st.subheader("Road traffic extraction")
     st.write("##### Extracting just the roads from the map was a challenge. We used OpenCV to extract the roads from the map for each time periods on different days. We then used the extracted roads to create a mask for the heatmap.")
 
-    subtracted_image1 = "heatmap/Map_images/Subtracted_images/Sun_8.png"
-    subtracted_image2 = "heatmap/Map_images/Subtracted_images/fri_20.png"
+    subtracted_image1 = "generation_code/heatmap/Map_images/Subtracted_images/Sun_8.png"
+    subtracted_image2 = "generation_code/heatmap/Map_images/Subtracted_images/fri_20.png"
 
     col1, col2 = st.columns(2)
     with col1:
@@ -78,19 +78,19 @@ def display_heatmap_info():
 
     st.subheader("Traffic data combination")
     st.write("##### After the extraction of road traffic data for multile time periods for every day of the week, we combined these images to provide us with the data where the traffic in concentrated")
-    st.image('heatmap/blended.png', caption="Combined traffic data", width=1080)
+    st.image('generation_code/heatmap/blended.png', caption="Combined traffic data", width=1080)
 
     st.write("##### Now the common areas of heaby traffic are isolated and extracted. We then used this image to create a mask for the heatmap.")
-    st.image('heatmap/traffic_data.png', caption="Isolated traffic data", width=1080)
+    st.image('generation_code/heatmap/traffic_data.png', caption="Isolated traffic data", width=1080)
 
     st.subheader("Heatmap creation")
     st.write("##### We then used the isolated traffic data to create a heatmap. The darker the color, the more traffic in that city. ")
 
     col1, col2 = st.columns(2)
     with col1:
-        st.image('heatmap/heatmap.png', caption="Heatmap")
+        st.image('generation_code/heatmap/heatmap.png', caption="Heatmap")
     with col2:
-        st.image('heatmap/blr_heatmap2.png', caption="Heatmap Imposed on Map")
+        st.image('generation_code/heatmap/blr_heatmap2.png', caption="Heatmap Imposed on Map")
 
 def charger_consumption_data_view():
     st.write("## Consumption Data")
