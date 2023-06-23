@@ -21,10 +21,10 @@ from charger_data import color_map
 # DATA HELPERS
 # --------------------------------------------------
 
-'''
-Process the charger map data and return a dataframe
-'''
 def process_data():
+    '''
+    Process the charger map data and return a dataframe
+    '''
     # Read file containing location details
     df = pd.read_json('charger_map_data.json')
 
@@ -43,10 +43,10 @@ def process_data():
 # MAPS HELPERS
 # --------------------------------------------------
 
-'''
-Take a city name and return the coordinates of the city
-'''
 def get_coordinates(city_name):
+    '''
+    Take a city name and return the coordinates of the city
+    '''
     geolocator = Nominatim(user_agent="reverse_geocoding_example")
     location = geolocator.geocode(city_name, exactly_one=True)
     if location:
@@ -56,18 +56,17 @@ def get_coordinates(city_name):
     else:
         return None
 
-
-'''
-Find Euclidean distance between two points
-'''
 def euclidean_distance(point1, point2):
-   return math.sqrt(sum((float(a) - float(b)) ** 2 for a, b in zip(point1, point2)))
+    '''
+    Find Euclidean distance between two points
+    '''
+    return math.sqrt(sum((float(a) - float(b)) ** 2 for a, b in zip(point1, point2)))
 
 
-'''
-Find n closest points to x from list Y
-'''
 def find_closest_points(x, Y, n):
+    '''
+    Find n closest points to x from list Y
+    '''
     distances = []
     for y in Y:
         idx = y[0]
@@ -84,20 +83,20 @@ def find_closest_points(x, Y, n):
     return closest_points[:n]
 
 
-'''
-This function takes in the origin and destination coordinates and returns the distance between them.
-'''
 def find_maps_distance(origin, destination, maps_api_key):
+    '''
+    This function takes in the origin and destination coordinates and returns the distance between them.
+    '''
     url = f"https://maps.googleapis.com/maps/api/distancematrix/json?origins={origin}&destinations={destination}&units=metric&key={maps_api_key}"
     response = requests.get(url).json()
     return response
 
 
-'''
-This function takes in a DataFrame, a given coordinate and returns the details of the
-coordinates from the DataFrame nearest to the given coordinate. 
-'''
 def find_nearest_coordinate(given_coordinate, maps_api_key, n = 5):
+    '''
+    This function takes in a DataFrame, a given coordinate and returns the details of the
+    coordinates from the DataFrame nearest to the given coordinate. 
+    '''
     # Get Google Maps API Key
     maps_api_key = os.environ.get("GOOGLE_API_KEY")
 
@@ -132,10 +131,10 @@ def find_nearest_coordinate(given_coordinate, maps_api_key, n = 5):
 
     return indices[:n], distances[:n], durations[:n], addresses[:n]
 
-'''
-Take a dataframe and city name as input and display the chargers in that city
-'''
 def display_city_chargers(city):
+    '''
+    Take a dataframe and city name as input and display the chargers in that city
+    '''
     # Create DataFrame by processing the data
     df = process_data()
 
@@ -171,7 +170,11 @@ def display_city_chargers(city):
     # Render Folium map in Streamlit
     return st_folium.st_folium(map, width=725)
 
+
 def display_chargers_by_location(location):
+    '''
+    Take a location as input and display the chargers near that location
+    '''
     # Get Google Maps API Key
     maps_api_key = os.environ.get("GOOGLE_API_KEY")
 
@@ -230,10 +233,10 @@ def display_chargers_by_location(location):
     st.dataframe(pd.DataFrame(display_chargers_df))
 
 
-'''
-Using points and specified radius, forms clusters based on density
-'''
 def cluster_by_distance(points, radius):
+    '''
+    Using points and specified radius, forms clusters based on density
+    '''
     distances = []
     n = len(points)
     for i in range(n):
@@ -254,6 +257,9 @@ def cluster_by_distance(points, radius):
     return clusters
 
 def display_user_requested_chargers():
+    '''
+    Perform clustering on user requested chargers and display the results
+    '''
     # Read csv file containing user requested chargers
     df = pd.read_csv("user_requested_chargers.csv")
 
@@ -348,7 +354,11 @@ def display_user_requested_chargers():
     
     st_folium.st_folium(density_based_clusters_map_1, width=725, key="density_based_clusters_map")
 
+
 def st_filter_template(df, attribute, default_all=False):
+    '''
+    Streamlit filter template
+    '''
     container = st.container()
     all = st.checkbox(f"Select all {attribute}", value=default_all)
     values = list(df[attribute].unique().sort())
@@ -362,10 +372,10 @@ def st_filter_template(df, attribute, default_all=False):
     return selected_options
 
 
-'''
-
-'''
 def display_charger_consumption_data():
+    '''
+    Display an artificially charger consumption dataset with filter and pivot table functionality
+    '''
     data = pl.read_csv("charger_consumption_data.csv")
 
     # Drop the first column
