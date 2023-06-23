@@ -18,7 +18,7 @@ selected = option_menu(
     menu_title="ZapCharge",
     menu_icon="lightning-charge-fill",
     options=["Chargers by City", "Chargers by Location", "User Requested Chargers", "Traffic Heatmap", "Charger Consumption Data"],
-    icons=["ev-station-fill", "pin-map-fill",  "people-fill", "stoplights-fill", "lightning-charge-fill"], # icons from https://icons.getbootstrap.com/
+    icons=["ev-station-fill", "pin-map-fill",  "people-fill", "stoplights-fill", "bar-chart-fill"], # icons from https://icons.getbootstrap.com/
     default_index=0,
     orientation=orientation,
 )
